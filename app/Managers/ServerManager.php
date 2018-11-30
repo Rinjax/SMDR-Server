@@ -31,9 +31,14 @@ class ServerManager
 
     public function run()
     {
-        $packet = stream_socket_recvfrom($this->socket, 1500, 0);
+        do{
+            $packet = stream_socket_recvfrom($this->socket, 1500, 0);
 
-        //$packet >>
+            $this->writeToLogFile($packet);
+        }
+
+        while ($packet !== false);
+
     }
 
     public function writeToLogFile($packet)
