@@ -2,31 +2,32 @@
 
 namespace App\Managers;
 
-use Carbon\Carbon;
 
 class ServerManager
 {
     protected $socket;
 
-    protected $logFile;
+    protected $ServerPort;
 
-    protected $ip;
+    protected $FileLogger;
 
-    protected $port;
+    protected $DatabaseManager;
+
+    protected $SMDRInterpreter;
+
 
     public function __construct()
     {
-        $this->ip = getenv('SMDR_IP');
-        $this->port = getenv('SMDR_PORT');
+       $this->ServerPort = new ServerPort();
 
-        $this->logFile = $this->setLogFile();
+       $this->FileLogger = new FileLogger();
 
-        set_time_limit(0);
+       $this->socket = $this->ServerPort->buildPort();
 
-        $this->socket = stream_socket_server("udp://" . $this->ip .":" . $this->port, $errno, $errstr, STREAM_SERVER_BIND);
-        if (!$this->socket) {
-            die("$errstr ($errno)");
-        }
+       $this->DatabaseManager = new DatabaseManager();
+
+       $this->SMDRInterpreter = new SMDRInterpreter();
+
     }
 
     public function run()
@@ -35,23 +36,14 @@ class ServerManager
             $packet = stream_socket_recvfrom($this->socket, 1500, 0);
 
             $this->writeToLogFile($packet);
+
+            // write to sql
+
+            // relay to mycalls
         }
 
         while ($packet !== false);
 
     }
 
-    public function writeToLogFile($packet)
-    {
-        try{
-            file_put_contents($this->logFile, $packet, FILE_APPEND);
-        }catch(\Exception $e){
-            die($e->getMessage());
-        }
-    }
-
-    public function setLogFile()
-    {
-        return APP_ROOT . '/Logs/' . Carbon::now()->format('Y-m-d') . '-SMDR.log';
-    }
 }
