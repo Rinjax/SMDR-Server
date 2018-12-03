@@ -40,7 +40,7 @@ class Server
     {
 
         do{
-            $packet = stream_socket_recvfrom($this->socket, 1500, 0);
+            $packet = stream_socket_recvfrom($this->RxSocket, 1500, 0);
 
             $this->SMDRController->logToFile($packet);
 
