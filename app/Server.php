@@ -4,13 +4,14 @@ namespace App;
 
 use App\Controllers\DatabaseController;
 use App\Controllers\SMDRLogController;
-use App\Managers\DatabaseManager;
 use App\Managers\ServerPort;
 
 
 class Server
 {
-    protected $socket;
+    protected $RxSocket;
+
+    protected $TxSocket;
 
     protected $ServerPort;
 
@@ -25,13 +26,13 @@ class Server
     {
        $this->ServerPort = new ServerPort();
 
-       $this->socket = $this->ServerPort->buildPort();
+       $this->RxSocket = $this->ServerPort->buildReceivingPort();
+
+       $this->TxSocket = $this->ServerPort->buildSendingPort();
 
        $this->SMDRController = new SMDRLogController();
 
        $this->DatabaseController = new DatabaseController();
-
-       $this->test = new DatabaseManager();
 
     }
 
@@ -47,7 +48,7 @@ class Server
 
             $this->DatabaseController->writeSMDRToDatabase($smdrOject->map);
 
-            // relay to mycalls
+            fwrite($this->TxSocket, $packet);
         }
 
         while ($packet !== false);

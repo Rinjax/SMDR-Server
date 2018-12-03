@@ -19,7 +19,5 @@ class DatabaseController
 
         $this->manager->insert('cdr_ucm', $dataArray);
 
-        //close
-
     }
 }

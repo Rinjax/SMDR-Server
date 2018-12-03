@@ -4,60 +4,46 @@ namespace App\Managers;
 
 class ServerPort
 {
-    protected $socket;
+    protected $receivingSocket;
 
-    protected $logFile;
+    protected $receivingIp;
 
-    protected $ip;
+    protected $receivingPort;
 
-    protected $port;
+    protected $sendingSocket;
+
+    protected $sendingIp;
+
+    protected $sendingPort;
 
     public function __construct()
     {
+        $this->receivingIp = getenv('SMDR_IP');
+        $this->receivingPort = getenv('SMDR_PORT');
 
+        $this->sendingIp = getenv('RELAY_IP');
+        $this->sendingPort = getenv('RELAY_PORT');
     }
 
-    public function buildPort()
+    public function buildReceivingPort()
     {
-        $this->ip = getenv('SMDR_IP');
-        $this->port = getenv('SMDR_PORT');
 
-        $this->socket = stream_socket_server("udp://" . $this->ip .":" . $this->port, $errno, $errstr, STREAM_SERVER_BIND);
-        if (!$this->socket) {
+
+        $this->receivingSocket = stream_socket_server("udp://" . $this->receivingIp .":" . $this->receivingPort, $errno, $errstr, STREAM_SERVER_BIND);
+        if (!$this->receivingSocket) {
             die("$errstr ($errno)");
         }
 
-        return $this->socket;
+        return $this->receivingSocket;
     }
 
-    public function run()
+    public function buildSendingPort()
     {
-        do{
-            $packet = stream_socket_recvfrom($this->socket, 1500, 0);
-
-            $this->writeToLogFile($packet);
+        $this->sendingSocket = stream_socket_client("udp://" . $this->sendingIp .":" . $this->sendingPort, $errno, $errstr, 2);
+        if (!$this->sendingSocket) {
+            die("$errstr ($errno)");
         }
 
-        while ($packet !== false);
-
-    }
-
-    public function writeToLogFile($packet)
-    {
-        try{
-            file_put_contents($this->logFile, $packet . "\r\n", FILE_APPEND);
-        }catch(\Exception $e){
-            die($e->getMessage());
-        }
-    }
-
-    public function writeToDatabase()
-    {
-
-    }
-
-    public function setLogFile()
-    {
-        return APP_ROOT . '/Logs/' . Carbon::now()->format('Y-m-d') . '-SMDR.log';
+        return $this->sendingSocket;
     }
 }

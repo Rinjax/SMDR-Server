@@ -28,15 +28,6 @@ class SMDRLogController
     }
 
     /**
-     * replay the SMDR data back out to the MyCalls server
-     * @param $packet
-     */
-    public function relaySMDR($packet)
-    {
-
-    }
-
-    /**
      * Translate SMDR into correct schema object.
      * @param $packet
      * @return \App\Schemas\NEC3C
