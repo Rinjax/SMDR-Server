@@ -8,14 +8,22 @@ class SMDRInterpreter
 {
     protected $schema;
 
+    protected $logger;
+
     public function __construct()
     {
         $this->schema = getenv('SMDR_SCHEMA');
+
+        $this->logger = new LogManager('smdr-interpreter');
     }
 
     public function smdrToArray($smdr)
     {
-         return explode(',', $smdr);
+        $array = explode(',', $smdr);
+
+        $this->logger->debug('Array length is ' . count($array));
+
+        return $array;
     }
 
     public function arrayToSchema($array)
@@ -25,7 +33,8 @@ class SMDRInterpreter
                 return new NEC3C($array);
                 break;
             default:
-                die('Failed to build SMDR schema');
+                $this->logger->error('Failed to match SMDR schema');
+                die('Failed to match SMDR schema');
         }
     }
 }

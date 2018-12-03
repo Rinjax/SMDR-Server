@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Managers\LogManager;
 use App\Managers\SMDRFileLogger;
 use App\Managers\SMDRInterpreter;
 
@@ -11,11 +12,15 @@ class SMDRLogController
 
     protected $interpreter;
 
+    protected $logger;
+
     public function __construct()
     {
         $this->manager = new SMDRFileLogger();
 
         $this->interpreter = new SMDRInterpreter();
+
+        $this->logger = new LogManager('smdr-controller');
     }
 
     /**
@@ -24,6 +29,7 @@ class SMDRLogController
      */
     public function logToFile($packet)
     {
+        $this->logger->debug('Writing to SMDR log file');
         $this->manager->writeToLogFile($packet);
     }
 
@@ -34,6 +40,7 @@ class SMDRLogController
      */
     public function interpretSMDR($packet)
     {
+        $this->logger->debug('Matching SMDR to Schema');
         return $this->interpreter->arrayToSchema($this->interpreter->smdrToArray($packet));
     }
 }
