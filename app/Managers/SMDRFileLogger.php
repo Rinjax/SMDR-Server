@@ -6,8 +6,10 @@ use Carbon\Carbon;
 
 class SMDRFileLogger
 {
+    //log file that the SMDR will be recorded to.
     protected $logFile;
 
+    //logger class for recording log entries.
     protected $logger;
 
     public function __construct()
@@ -16,6 +18,11 @@ class SMDRFileLogger
 
         $this->logger = new LogManager('smdr-file-logger');
     }
+
+    /**
+     * Write the capture SMDR packet to the log file
+     * @param $packet
+     */
     public function writeToLogFile($packet)
     {
         try{

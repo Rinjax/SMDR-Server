@@ -6,8 +6,10 @@ use App\Schemas\NEC3C;
 
 class SMDRInterpreter
 {
+    //Schema that the class is currently locked into - set from the ENV file.
     protected $schema;
 
+    //logger class for recording log entries.
     protected $logger;
 
     public function __construct()
@@ -17,6 +19,11 @@ class SMDRInterpreter
         $this->logger = new LogManager('smdr-interpreter');
     }
 
+    /**
+     * Convert the SMDR data to an array
+     * @param $smdr
+     * @return array
+     */
     public function smdrToArray($smdr)
     {
         $array = explode(',', $smdr);
@@ -26,6 +33,12 @@ class SMDRInterpreter
         return $array;
     }
 
+    /**
+     * get the schema class that will match the smdr array to the correct array keys that will be need to storing to
+     * the database
+     * @param $array
+     * @return NEC3C
+     */
     public function arrayToSchema($array)
     {
         switch($this->schema){

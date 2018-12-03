@@ -18,6 +18,10 @@ class DatabaseController
         $this->logger = new LogManager('database-controller');
     }
 
+    /**
+     * Connect to the database and insert the data to the table
+     * @param $dataArray
+     */
     public function writeSMDRToDatabase($dataArray)
     {
         try{

@@ -10,16 +10,22 @@ use App\Managers\ServerPort;
 
 class Server
 {
+    //Server's Receiving Socket
     protected $RxSocket;
 
+    //Server's Transmitting Socket
     protected $TxSocket;
 
+    //Server's Port Manager.
     protected $ServerPort;
 
+    //SMDR Controller to handle SMDR processing.
     protected $SMDRController;
 
+    //Database Controller to handle DB processing.
     protected $DatabaseController;
 
+    //logger class for recording log entries.
     protected $logger;
 
 
@@ -39,6 +45,9 @@ class Server
 
     }
 
+    /**
+     *
+     */
     public function run()
     {
         $this->logger->info('Server has started and is listening on ' . $this->ServerPort->getReceivingIp() . ':' . $this->ServerPort->getReceivingPort());

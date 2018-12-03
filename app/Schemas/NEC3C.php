@@ -34,8 +34,10 @@ namespace App\Schemas;
 
 class NEC3C
 {
+    //the SMDR data provided as an array.
     protected $smdr;
 
+    //attribute to hold the mapped assoc array.
     public $map;
 
     public function __construct($smdrArray)
@@ -45,6 +47,11 @@ class NEC3C
         $this->map = $this->map($this->smdr);
     }
 
+    /**
+     * map the SMDR array to the correct database fields.
+     * @param $array
+     * @return array
+     */
     protected function map($array)
     {
         return [

@@ -22,22 +22,42 @@ class LogManager
 
     }
 
-    public function debug($message, array $data = null)
+    /**
+     * Log a debug entry to the log file.
+     * @param $message
+     * @param array|null $data
+     */
+    public function debug($message, array $data = [])
     {
         $this->logger->debug($message, $data);
     }
 
-    public function info($message, array $data = null)
+    /**
+     * Log a info entry to the log file.
+     * @param $message
+     * @param array|null $data
+     */
+    public function info($message, array $data = [])
     {
         $this->logger->info($message, $data);
     }
 
-    public function warning($message, array $data = null)
+    /**
+     * Log a warning to the log file.
+     * @param $message
+     * @param array|null $data
+     */
+    public function warning($message, array $data = [])
     {
         $this->logger->warning($message, $data);
     }
 
-    public function error($message, array $data = null)
+    /**
+     * Log an error to the log file.
+     * @param $message
+     * @param array|null $data
+     */
+    public function error($message, array $data = [])
     {
         $this->logger->error($message, $data);
     }
