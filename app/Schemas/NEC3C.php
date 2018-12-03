@@ -1,5 +1,35 @@
 <?php
 
+/*
+ * Reason Codes - Defines the reason for the telephone call’s appearance at the destination address:
+
+    • 0 - Unknown
+    • 1 - Direct
+    • 2 - Forwarded on busy
+    • 3 - Forwarded on no answer
+    • 4 - Forwarded
+    • 5 - Transferred
+    • 6 - Picked up
+    • 7 - Parked
+    • 8 - Conferenced
+    • 9 - Forwarded on DND
+    • 10 - Forwarded on unresolved address
+    • 11 - Intercom
+    • 12 - Callback
+    • 14 - Click to dial
+    • 15 - Supervision
+    • 16 - Group Page
+    • 17 - Auto Ring Back (ARB)
+    • 18 - Forwarded on reject
+
+ * Outcome Codes - Defines the outcome of the telephone call:
+
+    • 0 - Connected
+    • 1 - Congested
+    • 2 - Unanswered
+    • 3 - Trunks Busy
+ */
+
 namespace App\Schemas;
 
 class NEC3C
