@@ -3,7 +3,7 @@
 namespace App;
 
 use App\Controllers\DatabaseController;
-use App\Controllers\SMDRLogController;
+use App\Controllers\SMDRController;
 use App\Managers\LogManager;
 use App\Managers\ServerPort;
 
@@ -37,7 +37,7 @@ class Server
 
        $this->TxSocket = $this->ServerPort->buildSendingPort();
 
-       $this->SMDRController = new SMDRLogController();
+       $this->SMDRController = new SMDRController();
 
        $this->DatabaseController = new DatabaseController();
 
@@ -46,14 +46,14 @@ class Server
     }
 
     /**
-     *
+     * Main function to start running the SMDR server and start accepting packets
      */
     public function run()
     {
         $this->logger->info('Server has started and is listening on ' . $this->ServerPort->getReceivingIp() . ':' . $this->ServerPort->getReceivingPort());
 
         do{
-            $this->logger->debug('Receiving packets.');
+            $this->logger->debug('listening for packets.');
             $packet = stream_socket_recvfrom($this->RxSocket, 1500, 0);
             $this->logger->debug('Received: ' . $packet);
 
@@ -64,7 +64,11 @@ class Server
 
             $this->DatabaseController->writeSMDRToDatabase($smdrOject->map);
 
+            $this->logger->debug('Sending to Mycalls.');
+
             fwrite($this->TxSocket, $packet);
+
+            fclose($this->TxSocket);
         }
 
         while ($packet !== false);

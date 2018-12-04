@@ -30,6 +30,8 @@ class DatabaseManager
         \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC, //make the default fetch be an associative array.
     ];
 
+    protected $logger;
+
     public function __construct()
     {
         $this->username = getenv('DB_USERNAME');
@@ -46,6 +48,8 @@ class DatabaseManager
 
         //turn on errors in the form of exceptions for local development.
         if(getenv('APP_ENV') == 'local') array_push($this->options, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+
+        $this->logger = new LogManager('database-manager');
 
     }
 
@@ -73,12 +77,37 @@ class DatabaseManager
      */
     public function insert($table, $dataArray)
     {
+        $this->logger->debug('Database table: ' . $table . ' Data array: ', $dataArray);
+
         $columns = $this->dataArrayToColums($dataArray);
         $values = $this->dataArrayToValues($dataArray);
 
-        $statment = $this->DB->prepare("INSERT INTO " . $table . "(" . $columns . ")" . " VALUES (" . $values . ")");
+        $this->logger->debug('Data for SQL statement:', [
+            'table' => $table,
+            'columns' => $columns,
+            'values' => $values
+        ]);
 
-        return $statment->execute($dataArray);
+        /*$data = [
+            'call_id' => 11111,
+            'call_leg_id' => 222222
+        ];*/
+
+        $statment = $this->DB->prepare('INSERT INTO ' . $table . '(' . $columns . ') VALUES (' . $values . ')');
+        //$statment = $this->DB->prepare('INSERT INTO ' . $table . '(call_id,call_leg_id) VALUES (:call_id,:call_leg_id)');
+
+
+        // $this->logger->debug('Prepare statement: ' . $statment->debugDumpParams() );
+
+        try{
+            echo implode('  ',$dataArray);
+            return $statment->execute($dataArray);
+            //return $statment->execute($data);
+
+        }catch(\Exception $e){
+            $this->logger->debug('FAILED INSERT >>> ' . $e->getMessage());
+            die($e->getMessage());
+        }
     }
 
     /**
@@ -96,7 +125,9 @@ class DatabaseManager
             $string .= $key . ',';
         }
 
-        return substr($string, -1, 1);
+        $this->logger->debug('converting dataArray to string: ' . rtrim($string, ','));
+
+        return rtrim($string, ',');
     }
 
     /**
@@ -106,7 +137,7 @@ class DatabaseManager
      */
     protected function dataArrayToValues($dataArray)
     {
-        $keys =  array_values($dataArray);
+        $keys =  array_keys($dataArray);
 
         $string = '';
 
@@ -114,7 +145,7 @@ class DatabaseManager
             $string .= ':'. $key . ',';
         }
 
-        return substr($string, -1, 1);
+        return rtrim($string, ',');
     }
 
     /**

@@ -35,8 +35,13 @@ class DatabaseController
 
         try{
             $this->logger->debug('Beginning SQL insert.');
-            $this->manager->insert('cdr_ucm', $dataArray);
-            $this->logger->debug('record inserted');
+            $insert = $this->manager->insert('cdr_ucm', $dataArray);
+            if($insert){
+                $this->logger->debug('record inserted');
+            }else{
+                $this->logger->error('record not inserted');
+            }
+
 
         }catch(\Exception $e){
             $this->logger->error('Failed to write to database >>> ' . $e->getMessage());

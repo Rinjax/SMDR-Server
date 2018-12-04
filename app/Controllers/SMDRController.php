@@ -6,7 +6,7 @@ use App\Managers\LogManager;
 use App\Managers\SMDRFileLogger;
 use App\Managers\SMDRInterpreter;
 
-class SMDRLogController
+class SMDRController
 {
     protected $manager;
 

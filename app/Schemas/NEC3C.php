@@ -32,6 +32,8 @@
 
 namespace App\Schemas;
 
+use Carbon\Carbon;
+
 class NEC3C
 {
     //the SMDR data provided as an array.
@@ -55,22 +57,24 @@ class NEC3C
     protected function map($array)
     {
         return [
-            'call_id' =>$array[2],
-            'call_leg_id' => $array[22],
-            'time_of_call' => $array[14],
-            'origin_name' => $array[3],
-            'origin_type' => $array[4],
-            'origin_number' => $array[5],
-            'intended_name' => $array[9],
-            'intended_type' => $array[10],
-            'intended_number' => $array[11],
-            'received_name' => $array[6],
-            'received_type' => $array[7],
-            'received_number' => $array[8],
-            'outcome' => $array[12],
-            'reason' => $array[13],
-            'duration_call' => $array[15],
-            'duration_ring' => $array[38]
+            'call_id'           => (int)$array[1],
+            'call_leg_id'       => (int)$array[21],
+            'time_of_call'      => Carbon::createFromTimestamp((int)$array[13]),
+            'origin_name'       => $array[2],
+            'origin_type'       => $array[3],
+            'origin_number'     => $array[4],
+            'intended_name'     => $array[8],
+            'intended_type'     => $array[9],
+            'intended_number'   => $array[10],
+            'received_name'     => $array[5],
+            'received_type'     => $array[6],
+            'received_number'   => $array[7],
+            'outcome'           => (int)$array[11],
+            'reason'            => (int)$array[12],
+            'duration_call'     => (int) $array[14],
+            'duration_ring'     => (int) $array[38],  //should be 37 according to manual (array offset 0)
+            'created_at'        => Carbon::now(),
+            'updated_at'        => Carbon::now()
         ];
     }
 

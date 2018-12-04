@@ -28,7 +28,7 @@ class SMDRInterpreter
     {
         $array = explode(',', $smdr);
 
-        $this->logger->debug('Array length is ' . count($array));
+        $this->logger->debug('Array length is ' . count($array), $array);
 
         return $array;
     }
