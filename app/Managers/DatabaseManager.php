@@ -63,7 +63,7 @@ class DatabaseManager
             $this->DB = new \PDO($this->hostConnection, $this->username, $this->password, $this->options);
             echo("connected \r\n");
         }catch(\Exception $e){
-            die('bum ' . $e->getMessage());
+            die('bum connection to database' . $e->getMessage());
         }
 
         return $this->DB;

@@ -60,22 +60,44 @@ class NEC3C
             'call_id'           => (int)$array[1],
             'call_leg_id'       => (int)$array[21],
             'time_of_call'      => Carbon::createFromTimestamp((int)$array[13]),
-            'origin_name'       => $array[2],
+            'origin_name'       => $this->reorderName($array[2]),
             'origin_type'       => $array[3],
             'origin_number'     => $array[4],
-            'intended_name'     => $array[8],
+            'intended_name'     => $this->reorderName($array[8]),
             'intended_type'     => $array[9],
             'intended_number'   => $array[10],
-            'received_name'     => $array[5],
+            'received_name'     => $this->reorderName($array[5]),
             'received_type'     => $array[6],
             'received_number'   => $array[7],
             'outcome'           => (int)$array[11],
             'reason'            => (int)$array[12],
             'duration_call'     => (int) $array[14],
-            'duration_ring'     => (int) $array[38],  //should be 37 according to manual (array offset 0)
+            'duration_ring'     => (int) $array[37],
             'created_at'        => Carbon::now(),
             'updated_at'        => Carbon::now()
         ];
+    }
+
+    /**
+     * Search the string for the {!} marker - this is from escaped commas in the CDR data. If that is present, then the
+     * NEC has provided a name in the format SURNAME, FIRST - break the name into an array and return in the correct
+     * order FIRST SURNAME. If there is no {!} marker then its assumed that name is the correct way round
+     *
+     * @param $name
+     * @return string
+     */
+    protected function reorderName($name)
+    {
+        if(strpos($name, '{!}')){
+            $array = explode(' ', str_replace('{!}', '',$name));
+
+            if(count($array) == 2) return $array[1] . " " . $array[0];
+
+            if(count($array) == 3) return $array[2] . " " . $array[1] . " " . $array[0];
+        }
+
+        return $name;
+
     }
 
 }

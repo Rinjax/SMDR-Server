@@ -6,6 +6,7 @@ use App\Controllers\DatabaseController;
 use App\Controllers\SMDRController;
 use App\Managers\LogManager;
 use App\Managers\ServerPort;
+use App\Managers\SMDRInterpreter;
 
 
 class Server
@@ -57,6 +58,8 @@ class Server
             $packet = stream_socket_recvfrom($this->RxSocket, 1500, 0);
             $this->logger->debug('Received: ' . $packet);
 
+            var_dump($packet);
+
             $this->SMDRController->logToFile($packet);
 
             $this->logger->debug('Interpreting data using schema: ' . getenv('SMDR_SCHEMA'));
@@ -73,6 +76,19 @@ class Server
 
         while ($packet !== false);
 
+    }
+
+    /**
+     * Test function to develop the SMDR strings
+     */
+    public function test()
+    {
+        $inter = new SMDRInterpreter();
+
+        $smdr = "2,17184963,Global 4 Com,pstn,+441403272910,Hooper\, Dwayne,ext,1217,,,,0,5,1547569776,63,Trunk:1,,,,,,17187988,,global4\\Dwayne.Hooper,,9,,,,,,no,no,no,no,no,no,0,01403216134";
+
+        $obj = $inter->arrayToSchema($inter->smdrToArray($smdr));
+        var_dump($obj);
     }
     
 }

@@ -26,7 +26,7 @@ class SMDRInterpreter
      */
     public function smdrToArray($smdr)
     {
-        $array = explode(',', $smdr);
+        $array = explode(',', $this->cleanEscapedCommas($smdr));
 
         $this->logger->debug('Array length is ' . count($array), $array);
 
@@ -49,5 +49,16 @@ class SMDRInterpreter
                 $this->logger->error('Failed to match SMDR schema');
                 die('Failed to match SMDR schema');
         }
+    }
+
+    /**
+     * Remove any escaped commas \, as this screws up the breaking up into an array by comma. Replace with {!} mark so
+     * we can search and action later.
+     * @param $smdr
+     * @return mixed
+     */
+    protected function cleanEscapedCommas($smdr)
+    {
+        return str_replace('\,', '{!}', $smdr);
     }
 }
