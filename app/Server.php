@@ -69,7 +69,6 @@ class Server
 
             fwrite($this->TxSocket, $packet);
 
-            //fclose($this->TxSocket);
         }
 
         while ($packet !== false);
