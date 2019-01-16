@@ -58,8 +58,6 @@ class Server
             $packet = stream_socket_recvfrom($this->RxSocket, 1500, 0);
             $this->logger->debug('Received: ' . $packet);
 
-            var_dump($packet);
-
             $this->SMDRController->logToFile($packet);
 
             $this->logger->debug('Interpreting data using schema: ' . getenv('SMDR_SCHEMA'));
@@ -71,7 +69,7 @@ class Server
 
             fwrite($this->TxSocket, $packet);
 
-            fclose($this->TxSocket);
+            //fclose($this->TxSocket);
         }
 
         while ($packet !== false);
