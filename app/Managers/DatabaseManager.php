@@ -87,11 +87,7 @@ class DatabaseManager
             'columns' => $columns,
             'values' => $values
         ]);
-
-        /*$data = [
-            'call_id' => 11111,
-            'call_leg_id' => 222222
-        ];*/
+        
 
         $statment = $this->DB->prepare('INSERT INTO ' . $table . '(' . $columns . ') VALUES (' . $values . ')');
         //$statment = $this->DB->prepare('INSERT INTO ' . $table . '(call_id,call_leg_id) VALUES (:call_id,:call_leg_id)');

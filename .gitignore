@@ -2,4 +2,5 @@
 .env
 /.idea
 /.idea/vcs.xml
-/app/Logs
+/app/Logs/*/*.log
+meg.txt
