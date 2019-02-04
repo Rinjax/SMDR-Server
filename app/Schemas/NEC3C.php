@@ -61,14 +61,14 @@ class NEC3C
             'call_leg_id'       => (int)$array[21],
             'time_of_call'      => Carbon::createFromTimestamp((int)$array[13]),
             'origin_name'       => $this->reorderName($array[2]),
-            'origin_type'       => $array[3],
-            'origin_number'     => $array[4],
+            'origin_type'       => $this->nullable($array[3]),
+            'origin_number'     => $this->nullable($array[4]),
             'intended_name'     => $this->reorderName($array[8]),
-            'intended_type'     => $array[9],
-            'intended_number'   => $array[10],
+            'intended_type'     => $this->nullable($array[9]),
+            'intended_number'   => $this->nullable($array[10]),
             'received_name'     => $this->reorderName($array[5]),
-            'received_type'     => $array[6],
-            'received_number'   => $array[7],
+            'received_type'     => $this->nullable($array[6]),
+            'received_number'   => $this->nullable($array[7]),
             'outcome'           => (int)$array[11],
             'reason'            => (int)$array[12],
             'duration_call'     => (int) $array[14],
@@ -97,7 +97,18 @@ class NEC3C
         }
 
         return $name;
+    }
 
+    /**
+     * Convert blank strings to null
+     * @param $data
+     * @return null
+     */
+    protected function nullable($data)
+    {
+        if($data == '') return null;
+
+        return $data;
     }
 
 }
